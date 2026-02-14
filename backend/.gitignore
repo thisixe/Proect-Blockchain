@@ -1,0 +1,19 @@
+# 📦 Dependencies
+node_modules/
+
+# 🔐 Environment Variables (สำคัญมาก ห้ามอัปโหลดรหัสผ่าน!)
+.env
+
+# 📝 Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# 💻 OS Files
+.DS_Store
+Thumbs.db
+
+# 🛠️ Editor Settings
+.vscode/
+.idea/

@@ -1,0 +1,106 @@
+import React, { useState } from 'react';
+import axios from 'axios';
+import { PackagePlus, Save, CheckCircle } from 'lucide-react';
+
+const AddProduct = () => {
+  const [formData, setFormData] = useState({
+    name: '', price: '', image: '', factory: '', dealer: '', lotId: '', description: ''
+  });
+  const [status, setStatus] = useState({ loading: false, success: false, error: '' });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setStatus({ loading: true, success: false, error: '' });
+
+    try {
+      // 1. บันทึกสินค้าลงฐานข้อมูล (Shop)
+      await axios.post('http://localhost:5000/products', formData);
+
+      // 2. สร้าง Genesis Block (ประวัติเริ่มต้นใน Blockchain) ทันที
+      await axios.post('http://localhost:5000/chain', {
+        data: {
+          product_id: formData.lotId,
+          item: formData.name,
+          status: "MANUFACTURED",
+          location: { address: formData.factory },
+          factory: formData.factory,
+          dealer: formData.dealer,
+          sender: "System Admin",
+          receiver: "Warehouse"
+        }
+      });
+
+      setStatus({ loading: false, success: true, error: '' });
+      setFormData({ name: '', price: '', image: '', factory: '', dealer: '', lotId: '', description: '' }); // เคลียร์ฟอร์ม
+      
+      setTimeout(() => setStatus(prev => ({ ...prev, success: false })), 3000); // ซ่อนข้อความสำเร็จหลัง 3 วินาที
+
+    } catch (err) {
+      setStatus({ loading: false, success: false, error: err.response?.data?.message || 'เกิดข้อผิดพลาดในการบันทึกข้อมูล' });
+    }
+  };
+
+  return (
+    <div className="max-w-2xl mx-auto py-10 px-4 animate-fade-in-up">
+      <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
+        <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+          <PackagePlus className="text-blue-600" /> เพิ่มสินค้าใหม่เข้าคลัง
+        </h2>
+
+        {status.success && (
+          <div className="mb-6 bg-green-50 text-green-700 p-4 rounded-xl flex items-center gap-2 font-medium">
+            <CheckCircle /> เพิ่มสินค้าและสร้างประวัติลง Blockchain สำเร็จ!
+          </div>
+        )}
+        
+        {status.error && (
+          <div className="mb-6 bg-red-50 text-red-700 p-4 rounded-xl font-medium">{status.error}</div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-1">ชื่อสินค้า *</label>
+              <input type="text" name="name" required value={formData.name} onChange={handleChange} className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none" placeholder="เช่น iPhone 15 Pro" />
+            </div>
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-1">รหัสสินค้า (Lot ID) *</label>
+              <input type="text" name="lotId" required value={formData.lotId} onChange={handleChange} className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none" placeholder="เช่น IP15-ABC-123" />
+            </div>
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-1">ราคา (บาท) *</label>
+              <input type="number" name="price" required value={formData.price} onChange={handleChange} className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none" placeholder="เช่น 41900" />
+            </div>
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-1">ลิงก์รูปภาพ (URL)</label>
+              <input type="text" name="image" value={formData.image} onChange={handleChange} className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none" placeholder="https://..." />
+            </div>
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-1">โรงงานผู้ผลิต</label>
+              <input type="text" name="factory" value={formData.factory} onChange={handleChange} className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none" placeholder="เช่น Foxconn" />
+            </div>
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-1">ตัวแทนจำหน่าย</label>
+              <input type="text" name="dealer" value={formData.dealer} onChange={handleChange} className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none" placeholder="เช่น iStudio" />
+            </div>
+          </div>
+          
+          <div>
+            <label className="block text-sm font-bold text-gray-700 mb-1">รายละเอียดสินค้า</label>
+            <textarea name="description" rows="3" value={formData.description} onChange={handleChange} className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none" placeholder="อธิบายจุดเด่นของสินค้า..."></textarea>
+          </div>
+
+          <button type="submit" disabled={status.loading} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl transition flex justify-center items-center gap-2">
+            {status.loading ? "กำลังบันทึก..." : <><Save size={20} /> บันทึกสินค้าเข้าสู่ระบบ</>}
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default AddProduct;
