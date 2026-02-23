@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -7,15 +9,18 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 // 1. โหลด .env ก่อนเพื่อนเลย! (สำคัญมาก ต้องอยู่บนๆ)
-require('dotenv').config();
+
 
 // 2. ค่อยเรียกใช้ตัวแปรจาก .env
 const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret_key"; 
 
 // --- 1. CONFIGURATION ---
 const app = express();
+
 app.use(cors());
-app.use(bodyParser.json());
+
+app.use(express.json());
+
 
 // เชื่อมต่อ MongoDB ด้วย URL จาก .env
 mongoose.connect(process.env.MONGO_URI)
@@ -130,6 +135,7 @@ app.post('/register', async (req, res) => {
 
 // 2. Login (เข้าสู่ระบบ)
 app.post('/login', async (req, res) => {
+  console.log("LOGIN HIT")
   try {
     const { username, password } = req.body;
 
@@ -294,8 +300,9 @@ app.delete('/reset', async (req, res) => {
     }
 });
 
+
 // Start Server (ใช้ค่าจาก .env ถ้าไม่มีให้ใช้ 5000)
-const PORT = process.env.PORT || 5000;
+const PORT = 5001;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });

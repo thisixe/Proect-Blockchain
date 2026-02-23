@@ -10,7 +10,7 @@ const VerifyBadge = () => {
     // ให้ React ยิงไปถาม Node.js ว่า Blockchain ทั้งก้อน (Global Chain) ยังสมบูรณ์ดีไหม?
     const checkBlockchain = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/validate');
+        const response = await axios.get('http://localhost:5001/validate');
         setIsValid(response.data.valid); // จะได้ค่า true หรือ false
       } catch (error) {
         console.error("Validation error:", error);
@@ -25,7 +25,7 @@ const VerifyBadge = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center gap-2 text-gray-500 my-6 py-4 border-2 border-gray-100 rounded-xl bg-white shadow-sm">
+      <div className="flex items-center justify-center gap-2 py-4 my-6 text-gray-500 bg-white border-2 border-gray-100 shadow-sm rounded-xl">
         <Loader className="animate-spin" size={20} /> กำลังตรวจสอบความถูกต้องของระบบ Blockchain...
       </div>
     );

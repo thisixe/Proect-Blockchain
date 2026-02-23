@@ -15,7 +15,7 @@ const Auth = ({ onLogin }) => {
     setIsLoading(true);
 
     try {
-      const endpoint = isLogin ? 'http://localhost:5000/login' : 'http://localhost:5000/register';
+      const endpoint = isLogin ? 'http://localhost:5001/login' : 'http://localhost:5001/register';
       const res = await axios.post(endpoint, { username, password });
 
       if (isLogin) {
@@ -37,55 +37,55 @@ const Auth = ({ onLogin }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center items-center p-4">
-      <div className="max-w-md w-full bg-white rounded-3xl shadow-xl border border-gray-100 p-8">
-        <div className="text-center mb-8">
-          <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+    <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-50">
+      <div className="w-full max-w-md p-8 bg-white border border-gray-100 shadow-xl rounded-3xl">
+        <div className="mb-8 text-center">
+          <div className="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-blue-100 rounded-full">
             <Lock className="w-8 h-8 text-blue-600" />
           </div>
           <h2 className="text-3xl font-black text-gray-900">Tech Trace</h2>
-          <p className="text-gray-500 mt-2">
+          <p className="mt-2 text-gray-500">
             {isLogin ? "เข้าสู่ระบบเพื่อจัดการ Supply Chain" : "สมัครสมาชิกสำหรับแอดมิน"}
           </p>
         </div>
 
         {errorMsg && (
-          <div className="mb-6 bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl flex items-center gap-2 text-sm">
-            <ShieldAlert className="w-5 h-5 flex-shrink-0" />
+          <div className="flex items-center gap-2 px-4 py-3 mb-6 text-sm text-red-600 border border-red-200 bg-red-50 rounded-xl">
+            <ShieldAlert className="flex-shrink-0 w-5 h-5" />
             <p>{errorMsg}</p>
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-sm font-bold text-gray-700 mb-1">Username</label>
+            <label className="block mb-1 text-sm font-bold text-gray-700">Username</label>
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <User className="h-5 w-5 text-gray-400" />
+              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <User className="w-5 h-5 text-gray-400" />
               </div>
               <input
                 type="text"
                 required
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none transition-all"
+                className="block w-full py-3 pl-10 pr-3 transition-all border border-gray-300 outline-none rounded-xl focus:ring-2 focus:ring-blue-600 focus:border-transparent"
                 placeholder="กรอกชื่อผู้ใช้งาน"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-gray-700 mb-1">Password</label>
+            <label className="block mb-1 text-sm font-bold text-gray-700">Password</label>
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Lock className="h-5 w-5 text-gray-400" />
+              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <Lock className="w-5 h-5 text-gray-400" />
               </div>
               <input
                 type="password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none transition-all"
+                className="block w-full py-3 pl-10 pr-3 transition-all border border-gray-300 outline-none rounded-xl focus:ring-2 focus:ring-blue-600 focus:border-transparent"
                 placeholder="กรอกรหัสผ่าน"
               />
             </div>
@@ -94,7 +94,7 @@ const Auth = ({ onLogin }) => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full flex justify-center items-center gap-2 bg-gray-900 text-white p-3 rounded-xl font-bold hover:bg-blue-600 transition-colors active:scale-95 disabled:bg-gray-400"
+            className="flex items-center justify-center w-full gap-2 p-3 font-bold text-white transition-colors bg-gray-900 rounded-xl hover:bg-blue-600 active:scale-95 disabled:bg-gray-400"
           >
             {isLoading ? "กำลังโหลด..." : isLogin ? <><LogIn className="w-5 h-5"/> เข้าสู่ระบบ</> : <><UserPlus className="w-5 h-5"/> สร้างบัญชีใหม่</>}
           </button>
@@ -103,7 +103,7 @@ const Auth = ({ onLogin }) => {
         <div className="mt-6 text-center">
           <button
             onClick={() => { setIsLogin(!isLogin); setErrorMsg(''); }}
-            className="text-blue-600 font-bold hover:text-blue-800 text-sm transition-colors"
+            className="text-sm font-bold text-blue-600 transition-colors hover:text-blue-800"
           >
             {isLogin ? "ยังไม่มีบัญชีใช่ไหม? สมัครสมาชิก" : "มีบัญชีอยู่แล้ว? เข้าสู่ระบบเลย"}
           </button>

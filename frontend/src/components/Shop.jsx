@@ -11,7 +11,7 @@ const Shop = ({ onTrackProduct, currentUser }) => {
   // ดึงข้อมูลสินค้าจาก Backend
   const fetchProducts = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/products');
+      const response = await axios.get('http://localhost:5001/products');
       setProducts(response.data);
       setLoading(false);
     } catch (error) {
@@ -30,7 +30,7 @@ const Shop = ({ onTrackProduct, currentUser }) => {
 
     try {
       // ยิง API ไปสร้าง Block ที่ 2 (อัปเดตสถานะเป็น SOLD)
-      await axios.post('http://localhost:5000/chain', {
+      await axios.post('http://localhost:5001/chain', {
         data: {
           product_id: product.lotId,
           item: product.name,
@@ -55,40 +55,40 @@ const Shop = ({ onTrackProduct, currentUser }) => {
     }
   };
 
-  if (loading) return <div className="text-center py-10">กำลังโหลดสินค้า...</div>;
+  if (loading) return <div className="py-10 text-center">กำลังโหลดสินค้า...</div>;
 
   return (
-    <div className="max-w-6xl mx-auto py-10 px-4">
-      <h2 className="text-3xl font-bold mb-8 text-gray-800 flex items-center gap-2">
+    <div className="max-w-6xl px-4 py-10 mx-auto">
+      <h2 className="flex items-center gap-2 mb-8 text-3xl font-bold text-gray-800">
         <ShoppingCart className="text-blue-600" /> สินค้าในระบบ Supply Chain
       </h2>
 
       {buyStatus && (
-        <div className="mb-6 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl flex items-center gap-2 font-medium animate-fade-in-up">
+        <div className="flex items-center gap-2 px-4 py-3 mb-6 font-medium text-green-700 border border-green-200 bg-green-50 rounded-xl animate-fade-in-up">
           <ShieldCheck className="w-5 h-5" />
           {buyStatus}
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {products.map((product) => (
-          <div key={product._id} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition">
-            <div className="h-48 bg-gray-100 relative">
+          <div key={product._id} className="overflow-hidden transition bg-white border border-gray-100 shadow-sm rounded-2xl hover:shadow-md">
+            <div className="relative h-48 bg-gray-100">
               {product.image ? (
-                <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+                <img src={product.image} alt={product.name} className="object-cover w-full h-full" />
               ) : (
-                <div className="flex justify-center items-center w-full h-full text-gray-400">ไม่มีรูปภาพ</div>
+                <div className="flex items-center justify-center w-full h-full text-gray-400">ไม่มีรูปภาพ</div>
               )}
-              <div className="absolute top-2 right-2 bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded-lg">
+              <div className="absolute px-2 py-1 text-xs font-bold text-white bg-blue-600 rounded-lg top-2 right-2">
                 Lot: {product.lotId}
               </div>
             </div>
             
             <div className="p-5">
-              <h3 className="text-xl font-bold text-gray-900 mb-1">{product.name}</h3>
-              <p className="text-sm text-gray-500 mb-4 line-clamp-2">{product.description || "ไม่มีรายละเอียด"}</p>
+              <h3 className="mb-1 text-xl font-bold text-gray-900">{product.name}</h3>
+              <p className="mb-4 text-sm text-gray-500 line-clamp-2">{product.description || "ไม่มีรายละเอียด"}</p>
               
-              <div className="flex justify-between items-center mb-4">
+              <div className="flex items-center justify-between mb-4">
                 <span className="text-2xl font-black text-orange-600">
                   ฿{product.price ? product.price.toLocaleString() : '0'}
                 </span>
@@ -99,7 +99,7 @@ const Shop = ({ onTrackProduct, currentUser }) => {
                 {/* ปุ่มตรวจสอบเส้นทาง (มีอยู่แล้ว) */}
                 <button 
                   onClick={() => onTrackProduct(product.lotId)}
-                  className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold py-2 px-4 rounded-xl transition flex justify-center items-center gap-2"
+                  className="flex items-center justify-center flex-1 gap-2 px-4 py-2 font-bold text-gray-800 transition bg-gray-100 hover:bg-gray-200 rounded-xl"
                 >
                   <Search size={18} /> ตรวจสอบ
                 </button>
@@ -107,7 +107,7 @@ const Shop = ({ onTrackProduct, currentUser }) => {
                 {/* ปุ่มสั่งซื้อสินค้า (เพิ่มใหม่) จะโชว์ให้กดได้ทุกคน แต่บันทึกชื่อ currentUser */}
                 <button 
                   onClick={() => handleBuy(product)}
-                  className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-xl transition flex justify-center items-center gap-2"
+                  className="flex items-center justify-center flex-1 gap-2 px-4 py-2 font-bold text-white transition bg-blue-600 hover:bg-blue-700 rounded-xl"
                 >
                   <ShoppingCart size={18} /> สั่งซื้อ
                 </button>
@@ -117,7 +117,7 @@ const Shop = ({ onTrackProduct, currentUser }) => {
         ))}
 
         {products.length === 0 && (
-          <div className="col-span-full text-center py-10 text-gray-500">
+          <div className="py-10 text-center text-gray-500 col-span-full">
             ยังไม่มีสินค้าในระบบ (ให้ Admin เพิ่มสินค้าเข้ามาก่อนนะ)
           </div>
         )}

@@ -10,7 +10,7 @@ const AdminDashboard = ({ currentUser, onTrackProduct }) => {
   // ฟังก์ชันดึงข้อมูลสินค้าทั้งหมดจาก Database
   const fetchProducts = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/products');
+      const response = await axios.get('http://localhost:5001/products');
       setProducts(response.data);
       setLoading(false);
     } catch (error) {
@@ -36,7 +36,7 @@ const AdminDashboard = ({ currentUser, onTrackProduct }) => {
 
     try {
       // ยิง API สร้าง Block ใหม่ใน Blockchain
-      await axios.post('http://localhost:5000/chain', {
+      await axios.post('http://localhost:5001/chain', {
         data: {
           product_id: product.lotId,
           item: product.name,
@@ -59,57 +59,57 @@ const AdminDashboard = ({ currentUser, onTrackProduct }) => {
     }
   };
 
-  if (loading) return <div className="text-center py-10 font-bold text-gray-500">กำลังโหลดข้อมูลคลังสินค้า...</div>;
+  if (loading) return <div className="py-10 font-bold text-center text-gray-500">กำลังโหลดข้อมูลคลังสินค้า...</div>;
 
   return (
-    <div className="max-w-6xl mx-auto py-10 px-4 animate-fade-in-up">
-      <h2 className="text-3xl font-bold mb-8 text-gray-800 flex items-center gap-2">
+    <div className="max-w-6xl px-4 py-10 mx-auto animate-fade-in-up">
+      <h2 className="flex items-center gap-2 mb-8 text-3xl font-bold text-gray-800">
         <Package className="text-blue-600" /> แดชบอร์ดจัดการสถานะสินค้า (Admin Only)
       </h2>
 
       {updateStatusInfo && (
-        <div className="mb-6 bg-green-50 text-green-700 px-4 py-3 rounded-xl flex items-center gap-2 font-medium">
+        <div className="flex items-center gap-2 px-4 py-3 mb-6 font-medium text-green-700 bg-green-50 rounded-xl">
           <CheckCircle className="w-5 h-5" />
           {updateStatusInfo}
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {products.map((product) => (
-          <div key={product._id} className="bg-white p-5 rounded-2xl shadow-sm border border-gray-200 flex flex-col sm:flex-row gap-4">
+          <div key={product._id} className="flex flex-col gap-4 p-5 bg-white border border-gray-200 shadow-sm rounded-2xl sm:flex-row">
             {/* รูปภาพสินค้า & QR Code */}
-            <div className="w-full sm:w-1/3 flex flex-col gap-2 shrink-0">
-              <div className="h-32 bg-gray-100 rounded-xl overflow-hidden border">
+            <div className="flex flex-col w-full gap-2 sm:w-1/3 shrink-0">
+              <div className="h-32 overflow-hidden bg-gray-100 border rounded-xl">
                 {product.image ? (
-                  <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+                  <img src={product.image} alt={product.name} className="object-cover w-full h-full" />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">ไม่มีรูป</div>
+                  <div className="flex items-center justify-center w-full h-full text-sm text-gray-400">ไม่มีรูป</div>
                 )}
               </div>
               
               {/* --- โค้ดเพิ่ม QR Code Generator (ดึงจาก API ฟรี ไม่ต้องลงปลั๊กอิน) --- */}
-              <div className="bg-gray-50 p-2 rounded-xl border flex flex-col items-center justify-center">
-                <span className="text-xs font-bold text-gray-500 mb-1">Scan to Track</span>
+              {/* <div className="flex flex-col items-center justify-center p-2 border bg-gray-50 rounded-xl">
+                <span className="mb-1 text-xs font-bold text-gray-500">Scan to Track</span>
                 <img 
                   src={`https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(window.location.origin + '/?track=' + product.lotId)}`} 
                   alt="QR Code" 
                   className="w-20 h-20 rounded-lg shadow-sm"
                 />
-              </div>
+              </div> */}
             </div>
 
             {/* ข้อมูลและฟอร์มอัปเดต */}
-            <div className="w-full flex flex-col justify-between">
+            <div className="flex flex-col justify-between w-full">
               <div>
-                <div className="flex justify-between items-start mb-1">
+                <div className="flex items-start justify-between mb-1">
                   <h3 className="text-lg font-bold text-gray-900">{product.name}</h3>
-                  <span className="text-xs font-bold bg-gray-100 text-gray-600 px-2 py-1 rounded-md">Lot: {product.lotId}</span>
+                  <span className="px-2 py-1 text-xs font-bold text-gray-600 bg-gray-100 rounded-md">Lot: {product.lotId}</span>
                 </div>
-                <p className="text-sm text-gray-500 mb-3">โรงงาน: {product.factory} | ตัวแทน: {product.dealer}</p>
+                <p className="mb-3 text-sm text-gray-500">โรงงาน: {product.factory} | ตัวแทน: {product.dealer}</p>
               </div>
 
               {/* ฟอร์มเลือกสถานะและสถานที่ */}
-              <form onSubmit={(e) => handleUpdateStatus(product, e)} className="bg-gray-50 p-3 rounded-xl border border-gray-100 space-y-2">
+              <form onSubmit={(e) => handleUpdateStatus(product, e)} className="p-3 space-y-2 border border-gray-100 bg-gray-50 rounded-xl">
                 <div className="flex gap-2">
                   <select name="status" className="flex-1 p-2 text-sm border rounded-lg outline-none focus:ring-2 focus:ring-blue-500">
                     <option value="">-- เลือกสถานะขนส่ง --</option>
@@ -121,7 +121,7 @@ const AdminDashboard = ({ currentUser, onTrackProduct }) => {
                 </div>
                 <div className="flex gap-2">
                   <input type="text" name="location" placeholder="ระบุสถานที่อัปเดต (เช่น ท่าเรือแหลมฉบัง)..." className="flex-1 p-2 text-sm border rounded-lg outline-none focus:ring-2 focus:ring-blue-500" />
-                  <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm font-bold transition">
+                  <button type="submit" className="px-3 py-2 text-sm font-bold text-white transition bg-blue-600 rounded-lg hover:bg-blue-700">
                     อัปเดต
                   </button>
                 </div>
@@ -129,7 +129,7 @@ const AdminDashboard = ({ currentUser, onTrackProduct }) => {
               
               <button 
                 onClick={() => onTrackProduct(product.lotId)}
-                className="mt-3 w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-2 rounded-lg text-sm transition flex justify-center items-center gap-2"
+                className="flex items-center justify-center w-full gap-2 py-2 mt-3 text-sm font-bold text-gray-700 transition bg-gray-100 rounded-lg hover:bg-gray-200"
               >
                 <Search size={16} /> ดูประวัติ Blockchain ของสินค้านี้
               </button>

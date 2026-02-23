@@ -18,10 +18,10 @@ const AddProduct = () => {
 
     try {
       // 1. บันทึกสินค้าลงฐานข้อมูล (Shop)
-      await axios.post('http://localhost:5000/products', formData);
+      await axios.post('http://localhost:5001/products', formData);
 
       // 2. สร้าง Genesis Block (ประวัติเริ่มต้นใน Blockchain) ทันที
-      await axios.post('http://localhost:5000/chain', {
+      await axios.post('http://localhost:5001/chain', {
         data: {
           product_id: formData.lotId,
           item: formData.name,
@@ -45,56 +45,56 @@ const AddProduct = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto py-10 px-4 animate-fade-in-up">
-      <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
-        <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+    <div className="max-w-2xl px-4 py-10 mx-auto animate-fade-in-up">
+      <div className="p-8 bg-white border border-gray-100 shadow-lg rounded-2xl">
+        <h2 className="flex items-center gap-2 mb-6 text-2xl font-bold text-gray-800">
           <PackagePlus className="text-blue-600" /> เพิ่มสินค้าใหม่เข้าคลัง
         </h2>
 
         {status.success && (
-          <div className="mb-6 bg-green-50 text-green-700 p-4 rounded-xl flex items-center gap-2 font-medium">
+          <div className="flex items-center gap-2 p-4 mb-6 font-medium text-green-700 bg-green-50 rounded-xl">
             <CheckCircle /> เพิ่มสินค้าและสร้างประวัติลง Blockchain สำเร็จ!
           </div>
         )}
         
         {status.error && (
-          <div className="mb-6 bg-red-50 text-red-700 p-4 rounded-xl font-medium">{status.error}</div>
+          <div className="p-4 mb-6 font-medium text-red-700 bg-red-50 rounded-xl">{status.error}</div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
-              <label className="block text-sm font-bold text-gray-700 mb-1">ชื่อสินค้า *</label>
-              <input type="text" name="name" required value={formData.name} onChange={handleChange} className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none" placeholder="เช่น iPhone 15 Pro" />
+              <label className="block mb-1 text-sm font-bold text-gray-700">ชื่อสินค้า *</label>
+              <input type="text" name="name" required value={formData.name} onChange={handleChange} className="w-full p-3 border outline-none rounded-xl focus:ring-2 focus:ring-blue-500" placeholder="เช่น iPhone 15 Pro" />
             </div>
             <div>
-              <label className="block text-sm font-bold text-gray-700 mb-1">รหัสสินค้า (Lot ID) *</label>
-              <input type="text" name="lotId" required value={formData.lotId} onChange={handleChange} className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none" placeholder="เช่น IP15-ABC-123" />
+              <label className="block mb-1 text-sm font-bold text-gray-700">รหัสสินค้า (Lot ID) *</label>
+              <input type="text" name="lotId" required value={formData.lotId} onChange={handleChange} className="w-full p-3 border outline-none rounded-xl focus:ring-2 focus:ring-blue-500" placeholder="เช่น IP15-ABC-123" />
             </div>
             <div>
-              <label className="block text-sm font-bold text-gray-700 mb-1">ราคา (บาท) *</label>
-              <input type="number" name="price" required value={formData.price} onChange={handleChange} className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none" placeholder="เช่น 41900" />
+              <label className="block mb-1 text-sm font-bold text-gray-700">ราคา (บาท) *</label>
+              <input type="number" name="price" required value={formData.price} onChange={handleChange} className="w-full p-3 border outline-none rounded-xl focus:ring-2 focus:ring-blue-500" placeholder="เช่น 41900" />
             </div>
             <div>
-              <label className="block text-sm font-bold text-gray-700 mb-1">ลิงก์รูปภาพ (URL)</label>
-              <input type="text" name="image" value={formData.image} onChange={handleChange} className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none" placeholder="https://..." />
+              <label className="block mb-1 text-sm font-bold text-gray-700">ลิงก์รูปภาพ (URL)</label>
+              <input type="text" name="image" value={formData.image} onChange={handleChange} className="w-full p-3 border outline-none rounded-xl focus:ring-2 focus:ring-blue-500" placeholder="https://..." />
             </div>
             <div>
-              <label className="block text-sm font-bold text-gray-700 mb-1">โรงงานผู้ผลิต</label>
-              <input type="text" name="factory" value={formData.factory} onChange={handleChange} className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none" placeholder="เช่น Foxconn" />
+              <label className="block mb-1 text-sm font-bold text-gray-700">โรงงานผู้ผลิต</label>
+              <input type="text" name="factory" value={formData.factory} onChange={handleChange} className="w-full p-3 border outline-none rounded-xl focus:ring-2 focus:ring-blue-500" placeholder="เช่น Foxconn" />
             </div>
             <div>
-              <label className="block text-sm font-bold text-gray-700 mb-1">ตัวแทนจำหน่าย</label>
-              <input type="text" name="dealer" value={formData.dealer} onChange={handleChange} className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none" placeholder="เช่น iStudio" />
+              <label className="block mb-1 text-sm font-bold text-gray-700">ตัวแทนจำหน่าย</label>
+              <input type="text" name="dealer" value={formData.dealer} onChange={handleChange} className="w-full p-3 border outline-none rounded-xl focus:ring-2 focus:ring-blue-500" placeholder="เช่น iStudio" />
             </div>
           </div>
           
           <div>
-            <label className="block text-sm font-bold text-gray-700 mb-1">รายละเอียดสินค้า</label>
-            <textarea name="description" rows="3" value={formData.description} onChange={handleChange} className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none" placeholder="อธิบายจุดเด่นของสินค้า..."></textarea>
+            <label className="block mb-1 text-sm font-bold text-gray-700">รายละเอียดสินค้า</label>
+            <textarea name="description" rows="3" value={formData.description} onChange={handleChange} className="w-full p-3 border outline-none rounded-xl focus:ring-2 focus:ring-blue-500" placeholder="อธิบายจุดเด่นของสินค้า..."></textarea>
           </div>
 
-          <button type="submit" disabled={status.loading} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl transition flex justify-center items-center gap-2">
+          <button type="submit" disabled={status.loading} className="flex items-center justify-center w-full gap-2 px-4 py-3 font-bold text-white transition bg-blue-600 hover:bg-blue-700 rounded-xl">
             {status.loading ? "กำลังบันทึก..." : <><Save size={20} /> บันทึกสินค้าเข้าสู่ระบบ</>}
           </button>
         </form>

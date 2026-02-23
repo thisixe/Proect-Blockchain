@@ -49,7 +49,7 @@ function App() {
     if (!searchTerm) return;
     setLoading(true);
     try {
-      const response = await axios.get(`http://localhost:5000/chain/${searchTerm}`);
+      const response = await axios.get(`http://localhost:5001/chain/${searchTerm}`);
       setChainData(response.data);
       setActiveTab('track'); 
     } catch (error) {
@@ -63,7 +63,7 @@ function App() {
   const handleTrackProduct = (lotId) => {
     setSearchTerm(lotId);
     setLoading(true);
-    axios.get(`http://localhost:5000/chain/${lotId}`)
+    axios.get(`http://localhost:5001/chain/${lotId}`)
       .then(res => {
          setChainData(res.data);
          setActiveTab('track'); 
@@ -81,11 +81,11 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 font-sans">
+    <div className="min-h-screen font-sans bg-gray-50">
       
       {/* --- Navbar --- */}
-      <nav className="bg-gray-900 text-white px-6 py-3 flex justify-between items-center shadow-md relative z-30">
-        <div className="font-bold text-xl flex items-center gap-2">
+      <nav className="relative z-30 flex items-center justify-between px-6 py-3 text-white bg-gray-900 shadow-md">
+        <div className="flex items-center gap-2 text-xl font-bold">
           <ShieldCheck className="text-blue-400" />
           Logistics Blockchain 
           {currentUser.role === 'admin' ? (
@@ -95,7 +95,7 @@ function App() {
           )}
         </div>
         <div className="flex items-center gap-4">
-          <span className="text-gray-300 text-sm">ผู้ใช้งาน: <span className="text-white font-bold">{currentUser.username}</span></span>
+          <span className="text-sm text-gray-300">ผู้ใช้งาน: <span className="font-bold text-white">{currentUser.username}</span></span>
           <button onClick={handleLogout} className="flex items-center gap-2 text-sm bg-gray-700 hover:bg-gray-600 text-white px-3 py-1.5 rounded-lg transition-colors">
             <LogOut size={16} /> ออกจากระบบ
           </button>
@@ -103,8 +103,8 @@ function App() {
       </nav>
 
       {/* --- Tabs เมนู --- */}
-      <div className="bg-white shadow border-b sticky top-0 z-20">
-        <div className="max-w-4xl mx-auto flex justify-center gap-4 sm:gap-8 overflow-x-auto">
+      <div className="sticky top-0 z-20 bg-white border-b shadow">
+        <div className="flex justify-center max-w-4xl gap-4 mx-auto overflow-x-auto sm:gap-8">
             {/* เมนูที่ทุกคนเห็น */}
             <button 
                 onClick={() => setActiveTab('track')}
@@ -151,32 +151,32 @@ function App() {
         <AddProduct />
       ) : (
         <div className="pb-10 animate-fade-in-up">
-            <div className="bg-blue-800 text-white py-12 px-4 shadow-inner mb-8 bg-opacity-95" style={{ backgroundImage: "url('https://www.transparenttextures.com/patterns/cubes.png')" }}>
+            <div className="px-4 py-12 mb-8 text-white bg-blue-800 shadow-inner bg-opacity-95" style={{ backgroundImage: "url('https://www.transparenttextures.com/patterns/cubes.png')" }}>
                 <div className="max-w-3xl mx-auto text-center">
-                    <h1 className="text-4xl font-black mb-4 flex justify-center items-center gap-3 tracking-wide">
+                    <h1 className="flex items-center justify-center gap-3 mb-4 text-4xl font-black tracking-wide">
                         <Link size={36} className="text-blue-300" /> GLOBAL SUPPLY CHAIN
                     </h1>
-                    <p className="text-blue-200 text-lg">ระบบตรวจสอบเส้นทางสินค้าและโลจิสติกส์ด้วยเทคโนโลยีบล็อกเชน</p>
+                    <p className="text-lg text-blue-200">ระบบตรวจสอบเส้นทางสินค้าและโลจิสติกส์ด้วยเทคโนโลยีบล็อกเชน</p>
                 </div>
             </div>
 
-            <div className="max-w-3xl mx-auto px-4">
+            <div className="max-w-3xl px-4 mx-auto">
                 <form onSubmit={handleSearch} className="relative mb-8">
                     <input
                         type="text"
                         placeholder="กรอกหมายเลข Tracking / Lot ID (เช่น IP16PM-TH-001)"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full p-4 pl-12 rounded-xl border-2 border-blue-200 focus:border-blue-600 outline-none shadow-md text-lg transition-all"
+                        className="w-full p-4 pl-12 text-lg transition-all border-2 border-blue-200 shadow-md outline-none rounded-xl focus:border-blue-600"
                     />
-                    <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={24} />
-                    <button type="submit" className="absolute right-2 top-2 bottom-2 bg-blue-600 text-white px-8 font-bold rounded-lg hover:bg-blue-700 transition">
+                    <Search className="absolute text-gray-400 transform -translate-y-1/2 left-4 top-1/2" size={24} />
+                    <button type="submit" className="absolute px-8 font-bold text-white transition bg-blue-600 rounded-lg right-2 top-2 bottom-2 hover:bg-blue-700">
                         ติดตามสถานะ
                     </button>
                 </form>
 
                 {loading ? (
-                    <div className="text-center py-12 text-gray-500 font-medium animate-pulse">กำลังซิงค์ข้อมูลจากสายโซ่บล็อกเชน...</div>
+                    <div className="py-12 font-medium text-center text-gray-500 animate-pulse">กำลังซิงค์ข้อมูลจากสายโซ่บล็อกเชน...</div>
                 ) : chainData.length > 0 ? (
                     <div>
                         <VerifyBadge />
@@ -186,10 +186,10 @@ function App() {
                         </div>
                     </div>
                 ) : (
-                    <div className="text-center py-16 bg-white rounded-2xl border-2 border-dashed border-gray-200 shadow-sm">
-                        <Package size={64} className="mx-auto text-gray-200 mb-4" />
-                        <h3 className="text-xl font-bold text-gray-700 mb-2">ระบุหมายเลขพัสดุเพื่อตรวจสอบ</h3>
-                        <p className="text-gray-500 font-medium">ระบบสามารถตรวจสอบข้อมูลย้อนหลังได้ 100% โดยไม่สามารถแก้ไขข้อมูลได้</p>
+                    <div className="py-16 text-center bg-white border-2 border-gray-200 border-dashed shadow-sm rounded-2xl">
+                        <Package size={64} className="mx-auto mb-4 text-gray-200" />
+                        <h3 className="mb-2 text-xl font-bold text-gray-700">ระบุหมายเลขพัสดุเพื่อตรวจสอบ</h3>
+                        <p className="font-medium text-gray-500">ระบบสามารถตรวจสอบข้อมูลย้อนหลังได้ 100% โดยไม่สามารถแก้ไขข้อมูลได้</p>
                     </div>
                 )}
             </div>
